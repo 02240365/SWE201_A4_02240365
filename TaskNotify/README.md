@@ -1,97 +1,78 @@
-# TaskNotify — SWE201 Assignment 4
+# TaskNotify – Push Notification Task Reminder App
 
-**Push Notification–Enabled Task Reminder App**
-Expo SDK 54 · React Native 0.81 · TypeScript · Node.js · MongoDB Atlas
-
----
-
-## Features
-
-- Create, edit, delete tasks with due dates and reminder times
-- Local scheduled notifications via expo-notifications
-- Remote push notifications triggered from Express backend
-- Notification tap → navigates directly to Task Detail screen
-- Foreground, background, and cold-start notification handling
-- Android notification channel: `task-reminders` (HIGH importance)
-- Expo Push Token registered with backend on launch
-- AsyncStorage for local task persistence
-- Permission request, status display, and Settings link if denied
+Never miss a deadline again! TaskNotify is a task management app that keeps you on track with timely reminders, both locally on your phone and via remote push notifications from our backend.
 
 ---
 
-## Tech Stack
+## What You Can Do
 
-| Layer | Technology |
+- **Create & Manage Tasks** — Add tasks with descriptions, due dates, and custom reminder times
+- **Get Notifications** — Receive local alerts on your phone and remote push notifications from the server
+- **Smart Navigation** — Tap a notification and go directly to the task details
+- **Always Available** — Notifications work whether the app is open, running in the background, or closed
+- **Local Backup** — Your tasks are saved locally on your phone, so you never lose them
+
+---
+
+## Technology Behind the Scenes
+
+| Component | What We Use |
 |---|---|
-| Mobile | React Native 0.81 + Expo SDK 54 |
-| Notifications | expo-notifications ~0.32.11 |
-| Navigation | React Navigation 6 (Stack + Bottom Tabs) |
-| Local Storage | AsyncStorage |
-| Backend | Node.js + Express |
-| Database | MongoDB Atlas (Free) |
-| Hosting | Render (Free) |
-| Build | EAS Build → Android APK |
+| **Mobile App** | React Native with Expo SDK 54 |
+| **Notifications** | Expo Push Notifications library |
+| **Navigation** | React Navigation (smooth screen transitions) |
+| **Local Storage** | AsyncStorage for your tasks |
+| **Backend Server** | Node.js with Express |
+| **Database** | MongoDB for storing push tokens |
+| **Hosting** | Render (free cloud hosting) |
+| **Building** | EAS Build (creates the Android app) |
 
 ---
 
-## Project Structure
+## Project Layout
 
 ```
 TaskNotify/
-├── App.tsx
-├── app.json
-├── eas.json
-├── package.json
+├── App.tsx                          # Main app entry
+├── app.json                         # Expo configuration
+├── eas.json                         # Build configuration
+├── package.json                     # Dependencies
 ├── src/
-│   ├── api/backendApi.ts
-│   ├── navigation/AppNavigator.tsx
-│   ├── notifications/
-│   │   ├── notificationChannels.ts
-│   │   ├── notificationService.ts
-│   │   └── notificationListeners.ts
-│   ├── screens/
-│   │   ├── SplashScreen.tsx
-│   │   ├── HomeScreen.tsx
-│   │   ├── TaskListScreen.tsx
-│   │   ├── AddTaskScreen.tsx
-│   │   ├── EditTaskScreen.tsx
-│   │   ├── TaskDetailScreen.tsx
-│   │   ├── SettingsScreen.tsx
-│   │   └── AboutScreen.tsx
-│   ├── services/storageService.ts
-│   ├── types/index.ts
-│   └── utils/helpers.ts
-├── assets/screenshots/        ← put your screenshots here
-└── backend/
-    ├── server.js
-    ├── models/PushToken.js
-    ├── controllers/
-    ├── middleware/auth.js
-    └── routes/
+│   ├── api/backendApi.ts           # Connects to backend
+│   ├── navigation/AppNavigator.tsx  # Screen routing
+│   ├── notifications/               # Notification setup & listeners
+│   ├── screens/                     # All app screens (8 screens)
+│   ├── services/storageService.ts  # Save/load tasks locally
+│   ├── types/index.ts              # TypeScript types
+│   └── utils/helpers.ts            # Helper functions
+├── assets/screenshots/              # App screenshots for docs
+└── backend/                         # Backend server code
 ```
 
 ---
 
-## API Endpoints
+## Backend API
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| GET | `/api/health` | None | Health check |
-| POST | `/api/register-token` | None | Register device token |
-| GET | `/api/tokens` | None | List all tokens |
-| POST | `/api/send-notification` | `x-api-key` header | Send push notification |
+The app talks to the backend through these endpoints:
+
+| Action | Endpoint | Notes |
+|---|---|---|
+| Health Check | `GET /api/health` | Make sure backend is alive |
+| Register Device | `POST /api/register-token` | Send your push token to the server |
+| Get All Tokens | `GET /api/tokens` | List registered devices |
+| Send Notification | `POST /api/send-notification` | Send a push notification (requires secret key) |
 
 ---
 
-## Environment Variables
+## Setup Instructions
 
-**Frontend** — `TaskNotify/.env`
+### Frontend Environment (`TaskNotify/.env`)
 ```
 EXPO_PUBLIC_API_URL=https://your-backend.onrender.com
 EXPO_PUBLIC_PROJECT_ID=your-eas-project-id
 ```
 
-**Backend** — `TaskNotify/backend/.env`
+### Backend Environment (`TaskNotify/backend/.env`)
 ```
 PORT=3000
 MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/tasknotify?retryWrites=true&w=majority
@@ -100,20 +81,23 @@ API_KEY=your-secret-key
 
 ---
 
-## Postman — Send Remote Notification
+## Testing Remote Notifications with Postman
+
+Want to send a test push notification? Use Postman:
 
 ```
 POST https://your-backend.onrender.com/api/send-notification
+
 Headers:
   Content-Type: application/json
   x-api-key: your-secret-key
 
 Body:
 {
-  "title": "Task Due Soon",
-  "body": "Complete your assignment",
+  "title": "Task Due Soon!",
+  "body": "Don't forget to complete your assignment",
   "broadcast": true,
-  "data": { "taskId": "your-task-id", "screen": "TaskDetail" }
+  "data": { "taskId": "123", "screen": "TaskDetail" }
 }
 ```
 
@@ -121,56 +105,48 @@ Body:
 
 ## Screenshots
 
-> Place screenshots in `assets/screenshots/` with the exact filenames below.
-
-### 1. Permission Request
+### Permission & Setup
 ![Permission Request](assets/screenshots/01-permission-request.png)
-*First launch — system dialog requesting notification permission.*
+*First time? We ask for permission to send notifications.*
 
-### 2. Permission Granted
 ![Permission Granted](assets/screenshots/02-permission-granted.png)
-*Settings screen showing permission status as GRANTED in green.*
+*All set! Check the Settings screen to see your permission status.*
 
-### 3. Add Task
+### Creating & Managing Tasks
 ![Add Task](assets/screenshots/03-add-task.png)
-*Add Task screen with title, description, due date, reminder, and toggle filled.*
+*Create a new task with all the details you need.*
 
-### 4. Task List
 ![Task List](assets/screenshots/04-task-list.png)
-*Task List showing tasks with notification ON/OFF badge, edit and delete actions.*
+*See all your tasks at a glance with quick edit and delete options.*
 
-### 5. Task Detail
 ![Task Detail](assets/screenshots/05-task-detail.png)
-*Task Detail showing due date, reminder, notification status, and action buttons.*
+*View complete task details and manage notifications.*
 
-### 6. Local Notification (Foreground)
+### Notifications in Action
 ![Local Notification](assets/screenshots/06-local-notification.png)
-*Foreground alert dialog showing notification title and body with View Task button.*
+*Get an instant alert when a local notification pops up.*
 
-### 7. Remote Notification (System Tray)
 ![Remote Notification](assets/screenshots/07-remote-notification.png)
-*Android notification tray showing remote push notification from backend.*
+*See push notifications from the backend in your notification tray.*
 
-### 8. Notification Tap → Task Detail
 ![Notification Navigation](assets/screenshots/08-notification-navigation.png)
-*App opened directly to Task Detail after tapping the notification.*
+*Tap a notification and jump straight to the task.*
 
-### 9. Postman Request
+### Backend & Database
 ![Postman](assets/screenshots/09-postman.png)
-*Postman showing POST /api/send-notification with 200 OK and results.*
+*Send test notifications through Postman.*
 
-### 10. MongoDB Token
 ![MongoDB](assets/screenshots/10-mongodb-token.png)
-*MongoDB Atlas — pushtokens collection with stored device push token.*
+*Your push tokens are safely stored in MongoDB.*
 
-### 11. Render Deployment
 ![Render](assets/screenshots/11-render-deployment.png)
-*Render dashboard showing backend service as Live and running.*
+*Backend is running live on Render cloud.*
 
 ---
 
-## Known Limitations
+## Things to Know
 
-- Push tokens require a real Android device (not emulator)
-- Render free tier sleeps after 15 min — first request takes ~30 sec to wake up
-- `SCHEDULE_EXACT_ALARM` permission required on Android 13+
+- **Real Device Required** — Push tokens only work on actual Android phones, not emulators
+- **Render Free Tier** — The backend may take ~30 seconds to wake up if unused for 15 minutes
+- **Android 13+** — You need the `SCHEDULE_EXACT_ALARM` permission for precise reminder timing
+
