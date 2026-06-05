@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "TaskReminderApp",
+    "slug": "taskreminderapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F172A"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourname.taskreminderapp"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0F172A"
+      },
+      "package": "com.yourname.taskreminderapp",
+      "permissions": [
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE",
+        "SCHEDULE_EXACT_ALARM"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#EC4899",
+          "sounds": [],
+          "androidMode": "default",
+          "androidCollapsedTitle": "%(count)s new notifications",
+          "iosDisplayInForeground": true
+        }
+      ]
+    ],
+    "scheme": "taskreminderapp",
+    "extra": {
+      "eas": {
+        "projectId": "9d8468d0-309b-405a-a034-d37a2f3ed575"
+      }
+    },
+    "owner": "zsonam"
+  }
+}
